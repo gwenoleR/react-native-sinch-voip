@@ -1,0 +1,43 @@
+{
+  "name": "react-native-sinch-voip",
+  "title": "React Native Sinch Voip",
+  "version": "0.0.1",
+  "description": "A react native package for Sinch Call Api",
+  "main": "index.js",
+  "files": [
+    "README.md",
+    "android",
+    "index.js",
+    "ios",
+    "src",
+    "react-native-sinch-voip.podspec"
+  ],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gwenoleR/react-native-sinch-voip.git",
+    "baseUrl": "https://github.com/gwenoleR/react-native-sinch-voip"
+  },
+  "keywords": [
+    "react-native",
+    "sinch",
+    "voip"
+  ],
+  "author": {
+    "name": "Gwénolé Roton",
+    "email": "gwenole.roton@live.com"
+  },
+  "license": "MIT",
+  "licenseFilename": "LICENSE",
+  "readmeFilename": "README.md",
+  "peerDependencies": {
+    "react": "^16.8.1",
+    "react-native": ">=0.60.0-rc.0 <1.0.x"
+  },
+  "devDependencies": {
+    "react": "^16.9.0",
+    "react-native": "^0.61.5"
+  }
+}
