@@ -43,6 +43,7 @@ const HOST = 'sandbox.sinch.com'; // clientapi.sinch.com for production
 then
 
 ```sh
+yarn
 yarn run start
 react-native run-ios
 ```

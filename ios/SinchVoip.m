@@ -5,7 +5,6 @@
 
 #import "React/RCTBridgeModule.h"
 #import "React/RCTEventEmitter.h"
-#import "MapKit/MapKit.h"
 
 @interface RCT_EXTERN_MODULE(SinchVoip, RCTEventEmitter)
 

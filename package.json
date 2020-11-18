@@ -1,7 +1,7 @@
 {
   "name": "react-native-sinch-voip",
   "title": "React Native Sinch Voip",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A react native package for Sinch Call Api",
   "main": "index.js",
   "files": [

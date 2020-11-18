@@ -5,7 +5,6 @@
 
 
 import Foundation
-import React
 import Sinch
 
 @objc(SinchVoip)
