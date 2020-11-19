@@ -99,7 +99,7 @@ const App = () => {
             />
             <Button
                 title="Call user !"
-                disabled={!isSinchSetup && !userIdToCall}
+                disabled={!(isSinchSetup && userIdToCall)}
                 onPress={() => callUser(userIdToCall)}
             />
         </View>
