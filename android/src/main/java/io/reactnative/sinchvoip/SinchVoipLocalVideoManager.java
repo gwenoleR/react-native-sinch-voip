@@ -37,9 +37,8 @@ public class SinchVoipLocalVideoManager extends SimpleViewManager {
             Log.d("SinchVoip", "Permission ok !");
         }
 
-         VideoController vc = sinchInstance.sinchClient.getVideoController();
-         vc.setResizeBehaviour(VideoScalingType.ASPECT_FIT);
-         vc.setCaptureDevicePosition(Camera.CameraInfo.CAMERA_FACING_FRONT);
+         VideoController vc = sinchInstance.videoController;
+         vc.setResizeBehaviour(VideoScalingType.ASPECT_FILL);
 
          View localeVideo = vc.getLocalView();
          localeVideo.setBackgroundColor(Color.YELLOW);

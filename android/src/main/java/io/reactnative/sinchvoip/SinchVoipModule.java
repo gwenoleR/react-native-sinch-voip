@@ -26,6 +26,7 @@ import com.sinch.android.rtc.calling.CallClient;
 import com.sinch.android.rtc.calling.CallClientListener;
 import com.sinch.android.rtc.calling.CallListener;
 import com.sinch.android.rtc.video.VideoCallListener;
+import com.sinch.android.rtc.video.VideoController;
 
 import java.util.List;
 
@@ -34,6 +35,7 @@ public class SinchVoipModule extends ReactContextBaseJavaModule {
     public static final String REACT_CLASS = "SinchVoip";
     private final ReactApplicationContext mContext;
     public SinchClient sinchClient;
+    public VideoController videoController;
     private Call mCall;
 
     public SinchVoipModule(ReactApplicationContext reactContext) {
@@ -53,12 +55,6 @@ public class SinchVoipModule extends ReactContextBaseJavaModule {
     @Override
     public String getName() {
         return "SinchVoip";
-    }
-
-    @ReactMethod
-    public void sampleMethod(String stringArgument, int numberArgument, Callback callback) {
-        // TODO: Implement some actually useful functionality
-        callback.invoke("Received numberArgument: " + numberArgument + " stringArgument: " + stringArgument);
     }
 
     @ReactMethod
@@ -82,6 +78,7 @@ public class SinchVoipModule extends ReactContextBaseJavaModule {
                 sinchClient.startListeningOnActiveConnection();
 
                 sinchClient.start();
+                videoController = sinchClient.getVideoController();
 
                 sinchClient.addSinchClientListener(new SinchClientListener() {
                     public void onClientStarted(SinchClient client) {
@@ -320,7 +317,7 @@ public class SinchVoipModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void switchCamera(){
-        sinchClient.getVideoController().toggleCaptureDevicePosition()
+        sinchClient.getVideoController().toggleCaptureDevicePosition();
     }
 
 }

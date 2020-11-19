@@ -27,8 +27,8 @@ public class SinchVoipRemoteVideoManager extends SimpleViewManager {
     protected View createViewInstance(@NonNull ThemedReactContext reactContext) {
          SinchVoipModule sinchInstance = reactContext.getNativeModule(SinchVoipModule.class);
 
-        VideoController vc = sinchInstance.sinchClient.getVideoController();
-        vc.setResizeBehaviour(VideoScalingType.ASPECT_FIT);
+        VideoController vc = sinchInstance.videoController;
+        vc.setResizeBehaviour(VideoScalingType.ASPECT_FILL);
 
         View remoteVideo = vc.getRemoteView();
         remoteVideo.setBackgroundColor(Color.YELLOW);
