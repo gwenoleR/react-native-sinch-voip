@@ -161,8 +161,7 @@ export const Call = ({
           position: 'absolute',
           top: 0,
           right: 0,
-          overflow: 'hidden',
-          backgroundColor: 'green',
+          overflow: 'hidden'
         }}/>
         {/* } */}
       {/* </View> */}

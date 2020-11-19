@@ -97,6 +97,10 @@ Active your video if your are in video call
 
 Disactive your video if your are in video call
 
+### `SinchVoip.switchCamera() => void`
+
+Change the current camera from `FRONT` to `BACK` or from `BACK` to `FRONT`
+
 ## Run example
 
 On `App.js` add your Sinch Application key

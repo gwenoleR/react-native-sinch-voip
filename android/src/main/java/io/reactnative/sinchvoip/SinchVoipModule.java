@@ -318,4 +318,9 @@ public class SinchVoipModule extends ReactContextBaseJavaModule {
         mCall.resumeVideo();
     }
 
+    @ReactMethod
+    public void switchCamera(){
+        sinchClient.getVideoController().toggleCaptureDevicePosition()
+    }
+
 }

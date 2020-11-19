@@ -18,15 +18,6 @@
     return YES;
 }
 
-RCT_EXPORT_METHOD(sampleMethod:(NSString *)stringArgument numberParameter:(nonnull NSNumber *)numberArgument callback:(RCTResponseSenderBlock)callback)
-{
-    // TODO: Implement some actually useful functionality
-    callback(@[[NSString stringWithFormat: @"numberArgument: %@ stringArgument: %@", numberArgument, stringArgument]]);
-}
-
-// TODO: REMOVE THIS
-RCT_EXTERN_METHOD(showSomething:(NSString *)message)
-
 RCT_EXTERN_METHOD(supportedEvents)
 
 RCT_EXTERN_METHOD(initClient:(NSString *)applicationKey applicationSecret:(NSString *)applicationSecret environmentHost:(NSString *)environmentHost userId:(NSString *)userId)
@@ -54,5 +45,7 @@ RCT_EXTERN_METHOD(disableSpeaker)
 RCT_EXTERN_METHOD(resumeVideo)
 
 RCT_EXTERN_METHOD(pauseVideo)
+
+RCT_EXTERN_METHOD(switchCamera)
 
 @end

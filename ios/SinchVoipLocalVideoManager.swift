@@ -8,18 +8,30 @@ import Sinch
 
 @objc(SinchVoipLocalVideoManager)
 class SinchVoipLocalVideoManager: RCTViewManager {
+    static let sharedInstance = SinchVoipLocalVideoManager()
+    
+    // Size will be override by the RN style
+    var superView = UIView(frame: CGRect(x: 0, y: 0,width: 1, height: 1))
+    var localView: UIView? = nil
+    
+    override private init() {
+        super.init()
+    }
+    
     override static func requiresMainQueueSetup() -> Bool {
       return true
     }
     
     override func view() -> UIView! {
-        let videoView: UIView = (SinchVoip.sharedInstance.client!.videoController()?.localView())!
-        videoView.backgroundColor = .black
-        videoView.contentMode = UIView.ContentMode.scaleAspectFit
+        let vc = SinchVoip.sharedInstance.videoController
         
-        let view = UIView(frame: CGRect(x: 0, y: 0, width: 110, height: 156))
-        view.addSubview(videoView)
+        localView = vc?.localView()
         
-        return view
+        localView?.contentMode = UIView.ContentMode.scaleAspectFill
+        localView?.backgroundColor = .darkGray
+
+        superView.addSubview(localView!)
+        
+        return superView
     }
 }

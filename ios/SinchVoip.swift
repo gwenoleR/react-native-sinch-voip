@@ -12,6 +12,8 @@ class SinchVoip: RCTEventEmitter {
     static let sharedInstance = SinchVoip()
     var client: SINClient? = nil
     var call: SINCall? = nil
+    var videoController: SINVideoController? = nil
+    var audioController: SINAudioController? = nil
     
     
     private override init() {
@@ -21,12 +23,6 @@ class SinchVoip: RCTEventEmitter {
      @objc open override func supportedEvents() -> [String] {
          return ["receiveIncomingCall", "callEstablish", "callEnd"]
      }
-    
-    // TODO: Remove this
-    @objc(showSomething:)
-    func showSomething(something: String){
-        print("SinchVoip::printMessage => \(something)")
-    }
     
     @objc(initClient:applicationSecret:environmentHost:userId:)
     func initClient(applicationKey: String, applicationSecret: String, environmentHost: String, userId: String) -> SINClient {
@@ -41,6 +37,9 @@ class SinchVoip: RCTEventEmitter {
         sinchClient?.start()
     
         SinchVoip.sharedInstance.client = sinchClient!
+        SinchVoip.sharedInstance.videoController = sinchClient!.videoController()
+        SinchVoip.sharedInstance.audioController = sinchClient!.audioController()
+        
         return sinchClient!
     }
     
@@ -84,6 +83,8 @@ class SinchVoip: RCTEventEmitter {
     func hangup() {
         SinchVoip.sharedInstance.call?.hangup()
         SinchVoip.sharedInstance.call = nil
+        SinchVoipRemoteVideoManager.sharedInstance.remoteView?.removeFromSuperview()
+        SinchVoipLocalVideoManager.sharedInstance.localView?.removeFromSuperview()
     }
     
     @objc(mute)
@@ -114,6 +115,12 @@ class SinchVoip: RCTEventEmitter {
     @objc(resumeVideo)
     func resumeVideo() {
         SinchVoip.sharedInstance.call?.resumeVideo()
+    }
+    
+    @objc(switchCamera)
+    func switchCamera() {
+        let current = SinchVoip.sharedInstance.videoController?.captureDevicePosition;
+        SinchVoip.sharedInstance.videoController?.captureDevicePosition = SINToggleCaptureDevicePosition(current!);
     }
 }
 
@@ -158,6 +165,8 @@ extension SinchVoip: SINCallDelegate {
             "callId": call.callId
         ])
         SinchVoip.sharedInstance.call = nil
+        SinchVoipRemoteVideoManager.sharedInstance.remoteView?.removeFromSuperview()
+        SinchVoipLocalVideoManager.sharedInstance.localView?.removeFromSuperview()
     }
     
     func callDidAddVideoTrack(_ call: SINCall!) {

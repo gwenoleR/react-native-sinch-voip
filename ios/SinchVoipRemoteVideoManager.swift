@@ -8,20 +8,30 @@ import Sinch
 
 @objc(SinchVoipRemoteVideoManager)
 class SinchVoipRemoteVideoManager: RCTViewManager {
+    static let sharedInstance = SinchVoipRemoteVideoManager()
+    
+    // Size will be override by the RN style
+    var superView = UIView(frame: CGRect(x: 0, y: 0, width: 1, height: 1))
+    var remoteView: UIView? = nil
+    
+    override private init() {
+        super.init()
+    }
+    
     override static func requiresMainQueueSetup() -> Bool {
       return true
     }
     
     override func view() -> UIView! {
-        print(SinchVoip.sharedInstance.client?.videoController()?.remoteView()! ?? "NOTHING TO SHOW")
-        let videoView: UIView = (SinchVoip.sharedInstance.client!.videoController()?.remoteView())!
-//        videoView.backgroundColor = .blue
-        videoView.contentMode = UIView.ContentMode.scaleAspectFit
+        let vc = SinchVoip.sharedInstance.videoController
         
-        // Size and position will be override by React Native Style
-        let view = UIView(frame: CGRect(x: 0, y: 0, width: 98, height: 130))
-        view.addSubview(videoView)
+        remoteView = vc?.remoteView()
         
-        return view
+        remoteView?.contentMode = UIView.ContentMode.scaleAspectFill
+        remoteView?.backgroundColor = .darkGray
+
+        superView.addSubview(remoteView!)
+        
+        return superView
     }
 }

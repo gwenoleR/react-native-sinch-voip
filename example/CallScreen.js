@@ -1,9 +1,14 @@
 import React from 'react';
-import {Call, LocalCameraView} from 'react-native-sinch-voip';
+import {TouchableOpacity} from 'react-native';
+import SinchVoip, {Call, LocalCameraView} from 'react-native-sinch-voip';
 
 export const CallScreen = ({route, navigation}) => {
   const incoming = route.params?.incoming;
   const camera = route.params?.camera;
+
+  const switchCamera = () => {
+    SinchVoip.switchCamera();
+  };
 
   return (
     <>
@@ -15,7 +20,8 @@ export const CallScreen = ({route, navigation}) => {
         }}
       />
       {camera && (
-        <LocalCameraView
+        <TouchableOpacity
+          onPress={switchCamera}
           style={{
             width: 110,
             height: 156,
@@ -24,8 +30,13 @@ export const CallScreen = ({route, navigation}) => {
             right: 16,
             borderRadius: 10,
             overflow: 'hidden',
-          }}
-        />
+          }}>
+          <LocalCameraView
+            style={{
+              flex: 1,
+            }}
+          />
+        </TouchableOpacity>
       )}
     </>
   );
