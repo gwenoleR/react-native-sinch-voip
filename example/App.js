@@ -13,7 +13,11 @@ import {createStackNavigator} from '@react-navigation/stack';
 
 import React, {Component} from 'react';
 import {StyleSheet, Text, View, Button, TextInput} from 'react-native';
-import {CallManager} from 'react-native-sinch-voip';
+import {
+  CallManager,
+  hasPermissions,
+  SinchVoipEvents,
+} from 'react-native-sinch-voip';
 import {CallScreen} from './CallScreen';
 
 const APPLICATION_KEY = '<YOUR-APPLICATION-KEY';
@@ -50,14 +54,15 @@ class MainScreen extends Component {
   componentDidMount() {
     const {navigation} = this.props;
 
-    this.receiveIncomingCallListener = this.sinchEventEmitter.addListener(
+    this.receiveIncomingCallListener = SinchVoipEvents.addListener(
       'receiveIncomingCall',
       async (call) => {
-        console.log(call);
-        navigation.navigate('CallScreen', {
-          incoming: true,
-          camera: call.camera,
-        });
+        if (hasPermissions()) {
+          navigation.navigate('CallScreen', {
+            incoming: true,
+            camera: call.camera,
+          });
+        }
       },
     );
   }
@@ -115,20 +120,24 @@ class MainScreen extends Component {
             <Button
               title="Call"
               onPress={() => {
-                CallManager.callUserId(this.state.userToCall);
-                navigation.navigate('CallScreen', {
-                  incoming: false,
-                });
+                if (hasPermissions()) {
+                  CallManager.callUserId(this.state.userToCall);
+                  navigation.navigate('CallScreen', {
+                    incoming: false,
+                  });
+                }
               }}
             />
             <Button
               title="Call with video"
               onPress={() => {
-                CallManager.videoCallUserId(this.state.userToCall);
-                navigation.navigate('CallScreen', {
-                  incoming: false,
-                  camera: true,
-                });
+                if (hasPermissions()) {
+                  CallManager.videoCallUserId(this.state.userToCall);
+                  navigation.navigate('CallScreen', {
+                    incoming: false,
+                    camera: true,
+                  });
+                }
               }}
             />
             <Button

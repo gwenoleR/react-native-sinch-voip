@@ -41,7 +41,6 @@ public class SinchVoipLocalVideoManager extends SimpleViewManager {
          vc.setResizeBehaviour(VideoScalingType.ASPECT_FILL);
 
          View localeVideo = vc.getLocalView();
-         localeVideo.setBackgroundColor(Color.YELLOW);
 
 
          return localeVideo;
