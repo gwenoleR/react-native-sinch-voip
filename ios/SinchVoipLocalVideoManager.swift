@@ -6,6 +6,7 @@
 import Foundation
 import Sinch
 
+@available(iOS 10.0, *)
 @objc(SinchVoipLocalVideoManager)
 class SinchVoipLocalVideoManager: RCTViewManager {
     static let sharedInstance = SinchVoipLocalVideoManager()
@@ -23,7 +24,7 @@ class SinchVoipLocalVideoManager: RCTViewManager {
     }
     
     override func view() -> UIView! {
-        let vc = SinchVoip.sharedInstance.videoController
+        let vc = SinchVoip.sharedInstance!.videoController
         
         localView = vc?.localView()
         

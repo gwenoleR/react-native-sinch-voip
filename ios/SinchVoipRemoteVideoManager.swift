@@ -6,6 +6,7 @@
 import Foundation
 import Sinch
 
+@available(iOS 10.0, *)
 @objc(SinchVoipRemoteVideoManager)
 class SinchVoipRemoteVideoManager: RCTViewManager {
     static let sharedInstance = SinchVoipRemoteVideoManager()
@@ -23,7 +24,7 @@ class SinchVoipRemoteVideoManager: RCTViewManager {
     }
     
     override func view() -> UIView! {
-        let vc = SinchVoip.sharedInstance.videoController
+        let vc = SinchVoip.sharedInstance!.videoController
         
         remoteView = vc?.remoteView()
         

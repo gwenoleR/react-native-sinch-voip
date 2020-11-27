@@ -20,7 +20,7 @@
 
 RCT_EXTERN_METHOD(supportedEvents)
 
-RCT_EXTERN_METHOD(initClient:(NSString *)applicationKey applicationSecret:(NSString *)applicationSecret environmentHost:(NSString *)environmentHost userId:(NSString *)userId)
+RCT_EXTERN_METHOD(initClient:(NSString *)applicationKey applicationSecret:(NSString *)applicationSecret environmentHost:(NSString *)environmentHost userId:(NSString *)userId userDisplayName:(NSString *)userDisplayName)
 
 RCT_EXTERN_METHOD(startListeningOnActiveConnection)
 
@@ -47,5 +47,7 @@ RCT_EXTERN_METHOD(resumeVideo)
 RCT_EXTERN_METHOD(pauseVideo)
 
 RCT_EXTERN_METHOD(switchCamera)
+
+RCT_EXTERN_METHOD(hasCurrentEstablishedCall)
 
 @end
