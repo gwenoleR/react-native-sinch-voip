@@ -96,12 +96,6 @@ class SinchVoip: RCTEventEmitter {
     @objc(hangup)
     func hangup() {
         print("SinchVoip::Hangup call")
-        if callManager != nil {
-            if let call = callManager!.getCurrentCall() {
-                callManager!.end(call: call)
-            }
-            
-        }
         SinchVoip.sharedInstance!.call?.hangup()
         SinchVoip.sharedInstance!.call = nil
         SinchVoipRemoteVideoManager.sharedInstance.remoteView?.removeFromSuperview()

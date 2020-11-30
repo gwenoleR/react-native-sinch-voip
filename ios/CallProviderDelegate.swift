@@ -11,7 +11,7 @@ import Sinch
 
 @available(iOS 10.0, *)
 @objc public final class CallProviderDelegate: NSObject {
-    static let sharedInstance = CallProviderDelegate()
+    @objc public static let sharedInstance = CallProviderDelegate()
     
     /// The app's provider configuration, representing its CallKit capabilities.
     static let providerConfiguration: CXProviderConfiguration = {
@@ -32,7 +32,7 @@ import Sinch
     let callManager : CallManager
     private let provider: CXProvider
     
-    @objc public override init() {
+    @objc private override init() {
         self.callManager = CallManager.sharedInstance
         provider = CXProvider(configuration: type(of: self).providerConfiguration)
         
@@ -142,13 +142,12 @@ extension CallProviderDelegate: CXProviderDelegate {
             action.fail()
             return
         }
-        
-        call.sinCall.answer()
         action.fulfill()
+        call.sinCall.answer()
     }
     
     public func provider(_ provider: CXProvider, perform action: CXEndCallAction) {
-        print("SinchVoip:: Callkit end trigger")
+        print("SinchVoip:: Callkit end trigger for id: \(action.callUUID)")
         guard let call = callManager.getCurrentCall() else {
             action.fail()
             return
