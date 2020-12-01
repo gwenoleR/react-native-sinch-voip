@@ -58,6 +58,7 @@ class SinchVoip: RCTEventEmitter {
     @objc(stopListeningOnActiveConnection)
     func stopListeningOnActiveConnection() {
         SinchVoip.sharedInstance!.client?.stopListeningOnActiveConnection()
+        SinchVoip.sharedInstance!.client?.unregisterPushNotificationDeviceToken()
     }
     
     @objc(terminate)

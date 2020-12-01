@@ -24,7 +24,6 @@
 		A50703EB256299C500FEC085 /* SinchVoip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SinchVoip.swift; sourceTree = "<group>"; };
 		A50703EC256299C500FEC085 /* SinchVoip.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SinchVoip.m; sourceTree = "<group>"; };
 		A54BABB9256C579F0027135E /* SinchVoipLocalVideoManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SinchVoipLocalVideoManager.m; sourceTree = "<group>"; };
-		A54BABBA256C579F0027135E /* SinchVoipCallKitProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SinchVoipCallKitProvider.swift; sourceTree = "<group>"; };
 		A54BABBB256C579F0027135E /* SinchVoipRemoteVideoManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SinchVoipRemoteVideoManager.swift; sourceTree = "<group>"; };
 		A54BABBC256C579F0027135E /* SinchVoipRemoteVideoManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SinchVoipRemoteVideoManager.m; sourceTree = "<group>"; };
 		A54BABBD256C579F0027135E /* SinchVoipLocalVideoManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SinchVoipLocalVideoManager.swift; sourceTree = "<group>"; };
@@ -52,7 +51,6 @@
 		58B511D21A9E6C8500147676 = {
 			isa = PBXGroup;
 			children = (
-				A54BABBA256C579F0027135E /* SinchVoipCallKitProvider.swift */,
 				A54BABB9256C579F0027135E /* SinchVoipLocalVideoManager.m */,
 				A54BABBD256C579F0027135E /* SinchVoipLocalVideoManager.swift */,
 				A54BABBC256C579F0027135E /* SinchVoipRemoteVideoManager.m */,
