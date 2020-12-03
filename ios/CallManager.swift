@@ -61,7 +61,7 @@ public final class CallManager: NSObject {
     /// Ends the specified call.
     /// - Parameter call: The call to end.
     func end(call: Call) {
-        print("SinchVoip::End call uuid \(getUUIDFrom(sinCall: call.sinCall!)) with CallKit id : \(call.callKitUUID)")
+        print("SinchVoip::End call with CallKit id : \(call.callKitUUID)")
         let endCallAction = CXEndCallAction(call:call.callKitUUID)
         let transaction = CXTransaction()
         transaction.addAction(endCallAction)

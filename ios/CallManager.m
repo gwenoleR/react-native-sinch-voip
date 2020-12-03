@@ -9,7 +9,15 @@
 
 @interface RCT_EXTERN_MODULE(CallManager, NSObject)
 
-//RCT_EXTERN_METHOD(supportedEvents)
+- (dispatch_queue_t)methodQueue
+{
+    return dispatch_get_main_queue();
+}
+
++ (BOOL)requiresMainQueueSetup
+{
+    return YES;
+}
 
 RCT_EXTERN_METHOD(startCall:(NSString*)handle video:(BOOL)video)
 
