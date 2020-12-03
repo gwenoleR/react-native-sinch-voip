@@ -99,6 +99,7 @@ import Sinch
                     self.callManager.setCurrentCall(call: call, uuid: uuid)
                 } else {
                     print("SinchVoip:: No call to set :(")
+                    self.callManager.setCurrentCall(call: nil, uuid: uuid)
                 }
             }
 
@@ -117,7 +118,7 @@ extension CallProviderDelegate: CXProviderDelegate {
          
         // stopAudio()
         
-        callManager.getCurrentCall()?.sinCall.hangup()
+        callManager.getCurrentCall()?.sinCall?.hangup()
         callManager.deleteCurrentCall()
     }
     
@@ -143,7 +144,7 @@ extension CallProviderDelegate: CXProviderDelegate {
             return
         }
         action.fulfill()
-        call.sinCall.answer()
+        call.sinCall?.answer()
     }
     
     public func provider(_ provider: CXProvider, perform action: CXEndCallAction) {
@@ -153,7 +154,7 @@ extension CallProviderDelegate: CXProviderDelegate {
             return
         }
         
-        call.sinCall.hangup()
+        call.sinCall?.hangup()
         action.fulfill()
         callManager.deleteCurrentCall()
     }

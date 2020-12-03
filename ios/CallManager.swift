@@ -10,11 +10,11 @@ import CallKit
 import Sinch
 
 class Call: NSObject {
-    var sinCall: SINCall
+    var sinCall: SINCall?
     var callKitUUID: UUID
     
-    init(sinCall: SINCall, callKitUUID: UUID){
-        self.sinCall = sinCall
+    init(sinCall: SINCall?, callKitUUID: UUID){
+        self.sinCall = sinCall ?? nil
         self.callKitUUID = callKitUUID
         super.init()
     }
@@ -61,7 +61,7 @@ public final class CallManager: NSObject {
     /// Ends the specified call.
     /// - Parameter call: The call to end.
     func end(call: Call) {
-        print("SinchVoip::End call uuid \(getUUIDFrom(sinCall: call.sinCall)) with CallKit id : \(call.callKitUUID)")
+        print("SinchVoip::End call uuid \(getUUIDFrom(sinCall: call.sinCall!)) with CallKit id : \(call.callKitUUID)")
         let endCallAction = CXEndCallAction(call:call.callKitUUID)
         let transaction = CXTransaction()
         transaction.addAction(endCallAction)
@@ -101,8 +101,8 @@ public final class CallManager: NSObject {
         return currentCall
     }
     
-    func setCurrentCall(call: SINCall, uuid: UUID) {
-        print("SinchVoip:: Set current call with SinchId: \(call.callId!) and CallKit ID: \(uuid.uuidString)")
+    func setCurrentCall(call: SINCall?, uuid: UUID) {
+        print("SinchVoip:: Set current call with SinchId: \(call?.callId!) and CallKit ID: \(uuid.uuidString)")
         currentCall = Call(sinCall: call, callKitUUID: uuid)
     }
     

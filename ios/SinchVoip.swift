@@ -149,9 +149,9 @@ class SinchVoip: RCTEventEmitter {
             inCall = true
             return self.sendEvent(withName: "hasCurrentCall", body: [
                 "inCall": inCall,
-                "useVideo":call!.sinCall.details.isVideoOffered,
-                "headers": call!.sinCall.headers!,
-                "remoteUserId": call!.sinCall.remoteUserId!
+                "useVideo":call!.sinCall!.details.isVideoOffered,
+                "headers": call!.sinCall!.headers!,
+                "remoteUserId": call!.sinCall!.remoteUserId!
             ])
         }
        
