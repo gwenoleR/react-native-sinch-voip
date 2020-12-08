@@ -45,10 +45,12 @@ export const hasAudioPermission = async () => {
 export const hasPermissions = async () => {
   if(Platform.OS === 'android'){
     const granted = await PermissionsAndroid.requestMultiple(
-      [PermissionsAndroid.PERMISSIONS.RECORD_AUDIO, PermissionsAndroid.PERMISSIONS.CAMERA]
+      [PermissionsAndroid.PERMISSIONS.RECORD_AUDIO, PermissionsAndroid.PERMISSIONS.CAMERA, PermissionsAndroid.PERMISSIONS.READ_PHONE_STATE]
     );
     if(granted["android.permission.RECORD_AUDIO"] === PermissionsAndroid.RESULTS.GRANTED &&
-     granted["android.permission.CAMERA"] === PermissionsAndroid.RESULTS.GRANTED){
+     granted["android.permission.CAMERA"] === PermissionsAndroid.RESULTS.GRANTED &&
+     granted["android.permission.READ_PHONE_STATE"] === PermissionsAndroid.RESULTS.GRANTED
+     ){
       return true
     }
     return false
