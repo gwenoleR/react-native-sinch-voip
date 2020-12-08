@@ -1,5 +1,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="io.reactnative.sinchvoip">
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <application>
+        <receiver android:name="io.reactnative.sinchvoip.SinchBroadcastReceiver" />
+        <service android:name="io.reactnative.sinchvoip.SinchVoipService"></service>
+    </application>
 
 </manifest>

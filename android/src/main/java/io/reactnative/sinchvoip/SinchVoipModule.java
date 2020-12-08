@@ -1,8 +1,10 @@
 package io.reactnative.sinchvoip;
 
-import android.os.Handler;
+import android.content.ComponentName;
+import android.content.Intent;
+import android.content.ServiceConnection;
+import android.os.IBinder;
 import android.util.Log;
-
 import androidx.annotation.Nullable;
 
 import com.facebook.react.bridge.Arguments;
@@ -10,43 +12,67 @@ import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
-import com.facebook.react.bridge.Callback;
 
+import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.module.annotations.ReactModule;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
-import com.sinch.android.rtc.ClientRegistration;
-import com.sinch.android.rtc.PushPair;
-import com.sinch.android.rtc.Sinch;
-import com.sinch.android.rtc.SinchClient;
-import com.sinch.android.rtc.SinchClientListener;
-import com.sinch.android.rtc.SinchError;
 import com.sinch.android.rtc.calling.Call;
-import com.sinch.android.rtc.calling.CallClient;
-import com.sinch.android.rtc.calling.CallClientListener;
-import com.sinch.android.rtc.calling.CallListener;
-import com.sinch.android.rtc.video.VideoCallListener;
-import com.sinch.android.rtc.video.VideoController;
 
-import java.util.List;
+
+import static android.content.Context.BIND_AUTO_CREATE;
 
 @ReactModule(name = SinchVoipModule.REACT_CLASS)
-public class SinchVoipModule extends ReactContextBaseJavaModule {
+public class SinchVoipModule extends ReactContextBaseJavaModule implements ServiceConnection {
     public static final String REACT_CLASS = "SinchVoip";
-    private final ReactApplicationContext mContext;
-    public SinchClient sinchClient;
-    public VideoController videoController;
-    private Call mCall;
+    public static ReactApplicationContext mContext;
+
+    private static SinchVoipService.SinchServiceInterface mSinchServiceInterface;
+
+    public static SinchVoipService.SinchServiceInterface getSinchServiceInterface() {
+        return mSinchServiceInterface;
+    }
+
+    private void bindService() {
+        Intent serviceIntent = new Intent(getReactApplicationContext(), SinchVoipService.class);
+        getReactApplicationContext().bindService(serviceIntent, this, BIND_AUTO_CREATE);
+    }
+
+
+    @Override
+    public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+        if (SinchVoipService.class.getName().equals(componentName.getClassName())) {
+            mSinchServiceInterface = (SinchVoipService.SinchServiceInterface) iBinder;
+        }
+    }
+
+    @Override
+    public void onServiceDisconnected(ComponentName componentName) {
+        if (SinchVoipService.class.getName().equals(componentName.getClassName())) {
+            mSinchServiceInterface = null;
+        }
+    }
 
     public SinchVoipModule(ReactApplicationContext reactContext) {
         super(reactContext);
-        this.mContext = reactContext;
+        mContext = reactContext;
+        bindService();
     }
 
     private void sendEvent(ReactContext reactContext,
+                                 String eventName,
+                                 @Nullable WritableMap params) {
+
+        reactContext
+                .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+                .emit(eventName, params);
+    }
+
+    public static void sendEvent(
                            String eventName,
                            @Nullable WritableMap params) {
-        reactContext
+
+        mContext
                 .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
                 .emit(eventName, params);
     }
@@ -58,266 +84,117 @@ public class SinchVoipModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void initClient(final String applicationKey, final String applicationSecret, final String environmentHost, final String userId) {
+    public void initClient(final String applicationKey, final String applicationSecret, final String environmentHost, final String userId, final String userDisplayName) {
         System.out.println("SinchVoip::Init Client with id " + userId);
-        final android.content.Context context = this.getReactApplicationContext();
-        Handler mainHandler = new Handler(context.getMainLooper());
 
-        Runnable mainThreadRunnable = new Runnable() {
-            @Override
-            public void run() {
-                sinchClient = Sinch.getSinchClientBuilder().context(context)
-                        .applicationKey(applicationKey)
-                        .applicationSecret(applicationSecret)
-                        .environmentHost(environmentHost)
-                        .userId(userId)
-                        .build();
+        mSinchServiceInterface.startClient(applicationKey, applicationSecret, environmentHost, userId, userDisplayName);
 
-                sinchClient.setSupportCalling(true);
-                sinchClient.setSupportActiveConnectionInBackground(true);
-                sinchClient.startListeningOnActiveConnection();
-
-                sinchClient.start();
-                videoController = sinchClient.getVideoController();
-
-                sinchClient.addSinchClientListener(new SinchClientListener() {
-                    public void onClientStarted(SinchClient client) {
-                        Log.d("SinchVoip", "onClientStarted");
-
-                        CallClient callClient = client.getCallClient();
-                        callClient.addCallClientListener(new CallClientListener() {
-                            @Override
-                            public void onIncomingCall(CallClient callClient, Call call) {
-                                Log.d("SinchVoip", "onIncomingCall");
-
-                                WritableMap params = Arguments.createMap();
-                                params.putString("callId", call.getCallId());
-                                params.putString("userId", call.getRemoteUserId());
-                                params.putBoolean("camera", call.getDetails().isVideoOffered());
-
-                                sendEvent(mContext, "receiveIncomingCall", params);
-
-                                call.addCallListener(new CallListener() {
-                                    @Override
-                                    public void onCallProgressing(Call call) {
-                                        Log.d("SinchVoip", "onCallProgressing");
-                                    }
-
-                                    @Override
-                                    public void onCallEstablished(Call call) {
-                                        Log.d("SinchVoip", "onCallEstablished");
-
-                                        WritableMap params = Arguments.createMap();
-                                        params.putString("callId", call.getCallId());
-
-                                        sendEvent(mContext, "callEstablish", params);
-
-                                    }
-
-                                    @Override
-                                    public void onCallEnded(Call call) {
-                                        Log.d("SinchVoip", "onCallEnded");
-
-                                        WritableMap params = Arguments.createMap();
-                                        params.putString("callId", call.getCallId());
-
-                                        sendEvent(mContext, "callEnd", params);
-
-                                        mCall = null;
-                                    }
-
-                                    @Override
-                                    public void onShouldSendPushNotification(Call call, List<PushPair> list) {
-                                        Log.d("SinchVoip", "onShouldSendPushNotification");
-                                    }
-                                });
-
-                                mCall = call;
-                            }
-                        });
-
-
-
-                    }
-
-                    public void onClientStopped(SinchClient client) {
-                        Log.d("SinchVoip", "onClientStopped");
-                    }
-
-                    public void onClientFailed(SinchClient client, SinchError error) {
-                        Log.d("SinchVoip", "onClientFailed");
-                    }
-
-                    public void onRegistrationCredentialsRequired(SinchClient client, ClientRegistration registrationCallback) { }
-
-                    public void onLogMessage(int level, String area, String message) { }
-                });
-
-
-            }
-        };
-
-        mainHandler.post(mainThreadRunnable);
     }
-
-
 
     @ReactMethod
     public void terminate() {
         Log.d("SinchVoip", "terminate");
-
-        sinchClient.stopListeningOnActiveConnection();
-        sinchClient.terminate();
-        sinchClient = null;
+        mSinchServiceInterface.stopClient();
     }
 
     @ReactMethod
     public void callUserWithIdUsingVideo(String userId){
         Log.d("SinchVoip", "CallUserUsingVideo");
-        Call call = sinchClient.getCallClient().callUserVideo(userId);
-        call.addCallListener(new VideoCallListener() {
-            @Override
-            public void onVideoTrackAdded(Call call) {
-                Log.d("SinchVoip", "onVideoTrackAdded");
-            }
-
-            @Override
-            public void onVideoTrackPaused(Call call) {
-                Log.d("SinchVoip", "onVideoTrackPaused");
-            }
-
-            @Override
-            public void onVideoTrackResumed(Call call) {
-                Log.d("SinchVoip", "onVideoTrackResumed");
-            }
-
-            @Override
-            public void onCallProgressing(Call call) {
-                Log.d("SinchVoip", "onCallProgressing");
-            }
-
-            @Override
-            public void onCallEstablished(Call call) {
-                Log.d("SinchVoip", "onCallEstablished");
-
-                WritableMap params = Arguments.createMap();
-                params.putString("callId", call.getCallId());
-
-                sendEvent(mContext, "callEstablish", params);
-
-            }
-
-            @Override
-            public void onCallEnded(Call call) {
-                Log.d("SinchVoip", "onCallEnded");
-
-                WritableMap params = Arguments.createMap();
-                params.putString("callId", call.getCallId());
-
-                sendEvent(mContext, "callEnd", params);
-
-                mCall = null;
-            }
-
-            @Override
-            public void onShouldSendPushNotification(Call call, List<PushPair> list) {
-                Log.d("SinchVoip", "onShouldSendPushNotification");
-            }
-        });
-
-        mCall = call;
+        mSinchServiceInterface.callUser(userId, true);
     }
 
     @ReactMethod
     public void callUserWithId(String userId) {
         Log.d("SinchVoip", "CallUser");
-        Call call = sinchClient.getCallClient().callUser(userId);
-        call.addCallListener(new CallListener() {
-            @Override
-            public void onCallProgressing(Call call) {
-                Log.d("SinchVoip", "onCallProgressing");
-            }
-
-            @Override
-            public void onCallEstablished(Call call) {
-                Log.d("SinchVoip", "onCallEstablished");
-
-                WritableMap params = Arguments.createMap();
-                params.putString("callId", call.getCallId());
-
-                sendEvent(mContext, "callEstablish", params);
-
-            }
-
-            @Override
-            public void onCallEnded(Call call) {
-                Log.d("SinchVoip", "onCallEnded");
-
-                WritableMap params = Arguments.createMap();
-                params.putString("callId", call.getCallId());
-
-                sendEvent(mContext, "callEnd", params);
-
-                mCall = null;
-            }
-
-            @Override
-            public void onShouldSendPushNotification(Call call, List<PushPair> list) {
-                Log.d("SinchVoip", "onShouldSendPushNotification");
-            }
-        });
-
-        mCall = call;
+        mSinchServiceInterface.callUser(userId, false);
     }
 
     @ReactMethod
     public void hangup() {
         Log.d("SinchVoip", "hangup");
-        mCall.hangup();
-        mCall = null;
+        Call call = mSinchServiceInterface.getCall();
+        if(call != null){
+            call.hangup();
+        }
     }
 
     @ReactMethod
     public void answer() {
-        if (mCall != null) {
-            Log.d("SinchVoip", "answer");
-            mCall.answer();
+        Log.d("SinchVoip", "hangup");
+        Call call = mSinchServiceInterface.getCall();
+        if(call != null){
+            call.answer();
         }
     }
 
     @ReactMethod
     public void mute(){
-        sinchClient.getAudioController().mute();
+        mSinchServiceInterface.getAudioController().mute();
     }
 
     @ReactMethod
     public void unmute() {
-        sinchClient.getAudioController().unmute();
+        mSinchServiceInterface.getAudioController().unmute();
     }
 
     @ReactMethod
     public void enableSpeaker() {
-        sinchClient.getAudioController().enableSpeaker();
+        mSinchServiceInterface.getAudioController().enableSpeaker();
     }
 
     @ReactMethod
     public void disableSpeaker() {
-        sinchClient.getAudioController().disableSpeaker();
+        mSinchServiceInterface.getAudioController().disableSpeaker();
     }
 
     @ReactMethod
     public void pauseVideo() {
-        mCall.pauseVideo();
+        Call call = mSinchServiceInterface.getCall();
+        if(call != null) {
+            call.pauseVideo();
+        }
     }
 
     @ReactMethod
     public void resumeVideo(){
-        mCall.resumeVideo();
+        Call call = mSinchServiceInterface.getCall();
+        if(call != null) {
+            call.resumeVideo();
+        }
     }
 
     @ReactMethod
     public void switchCamera(){
-        sinchClient.getVideoController().toggleCaptureDevicePosition();
+        mSinchServiceInterface.getVideoController().toggleCaptureDevicePosition();
     }
 
+    @ReactMethod
+    public void hasCurrentEstablishedCall(){
+        Call call = mSinchServiceInterface.getCall();
+        if( call != null) {
+            WritableMap params = Arguments.createMap();
+            params.putBoolean("inCall", true);
+            params.putString("remoteUserId", call.getRemoteUserId());
+            params.putBoolean("useVideo", call.getDetails().isVideoOffered());
+
+            sendEvent(mContext, "hasCurrentCall", params);
+        }
+    }
+
+    @ReactMethod
+    public void stopListeningOnActiveConnection() {
+        mSinchServiceInterface.stopClient();
+    }
+
+    @ReactMethod
+    public void reportIncommingCallFromPush(ReadableMap remoteMessage){
+        if(remoteMessage.hasKey("sinch")){
+            try {
+                mSinchServiceInterface.relayRemotePushNotificationPayload(remoteMessage.getString("sinch"));
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
 }

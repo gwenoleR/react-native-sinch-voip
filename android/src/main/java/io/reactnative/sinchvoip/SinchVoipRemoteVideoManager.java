@@ -13,6 +13,8 @@ import com.facebook.react.uimanager.ThemedReactContext;
 import com.sinch.android.rtc.video.VideoController;
 import com.sinch.android.rtc.video.VideoScalingType;
 
+import static io.reactnative.sinchvoip.SinchVoipModule.getSinchServiceInterface;
+
 public class SinchVoipRemoteVideoManager extends SimpleViewManager {
     private String REACT_CLASS = "SinchVoipRemoteVideo";
 
@@ -25,9 +27,7 @@ public class SinchVoipRemoteVideoManager extends SimpleViewManager {
     @NonNull
     @Override
     protected View createViewInstance(@NonNull ThemedReactContext reactContext) {
-         SinchVoipModule sinchInstance = reactContext.getNativeModule(SinchVoipModule.class);
-
-        VideoController vc = sinchInstance.videoController;
+        VideoController vc = getSinchServiceInterface().getVideoController();
         vc.setResizeBehaviour(VideoScalingType.ASPECT_FILL);
 
         View remoteVideo = vc.getRemoteView();

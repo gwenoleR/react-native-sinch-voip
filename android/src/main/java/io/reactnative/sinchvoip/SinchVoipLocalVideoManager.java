@@ -17,6 +17,8 @@ import com.facebook.react.uimanager.ThemedReactContext;
 import com.sinch.android.rtc.video.VideoController;
 import com.sinch.android.rtc.video.VideoScalingType;
 
+import static io.reactnative.sinchvoip.SinchVoipModule.getSinchServiceInterface;
+
 public class SinchVoipLocalVideoManager extends SimpleViewManager {
     private String REACT_CLASS = "SinchVoipLocalVideo";
 
@@ -29,7 +31,7 @@ public class SinchVoipLocalVideoManager extends SimpleViewManager {
     @NonNull
     @Override
     protected View createViewInstance(@NonNull ThemedReactContext reactContext) {
-         SinchVoipModule sinchInstance = reactContext.getNativeModule(SinchVoipModule.class);
+//         SinchVoipModule sinchInstance = reactContext.getNativeModule(SinchVoipModule.class);
 
         if (ContextCompat.checkSelfPermission(reactContext, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             Log.d("SinchVoip", "Problem with permissions");
@@ -37,7 +39,7 @@ public class SinchVoipLocalVideoManager extends SimpleViewManager {
             Log.d("SinchVoip", "Permission ok !");
         }
 
-         VideoController vc = sinchInstance.videoController;
+         VideoController vc = getSinchServiceInterface().getVideoController();
          vc.setResizeBehaviour(VideoScalingType.ASPECT_FILL);
 
          View localeVideo = vc.getLocalView();
