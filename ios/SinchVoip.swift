@@ -23,8 +23,12 @@ class SinchVoip: RCTEventEmitter {
     }
 
      @objc open override func supportedEvents() -> [String] {
-         return ["receiveIncomingCall", "callEstablish", "callEnd", "hasCurrentCall"]
+         return ["receiveIncomingCall", "callEstablish", "callEnd", "hasCurrentCall", "answerCall"]
      }
+    
+    public func sendReactEvent(event: String, body: Any){
+        self.sendEvent(withName: event, body: body)
+    }
     
     @objc(initClient:applicationSecret:environmentHost:userId:userDisplayName:)
     func initClient(applicationKey: String, applicationSecret: String, environmentHost: String, userId: String, userDisplayName: String) -> SINClient {

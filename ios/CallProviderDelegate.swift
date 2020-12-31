@@ -145,6 +145,11 @@ extension CallProviderDelegate: CXProviderDelegate {
         }
         action.fulfill()
         call.sinCall?.answer()
+        SinchVoip.sharedInstance?.sendReactEvent(event: "answerCall", body: [
+                                                    "inCall": true,
+                                                    "useVideo":call.sinCall?.details.isVideoOffered as Any,
+                                                    "headers": call.sinCall?.headers! as Any,
+                                                    "remoteUserId": call.sinCall?.remoteUserId! as Any])
     }
     
     public func provider(_ provider: CXProvider, perform action: CXEndCallAction) {
