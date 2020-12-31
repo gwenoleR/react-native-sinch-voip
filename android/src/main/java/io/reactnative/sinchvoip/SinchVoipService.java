@@ -447,6 +447,7 @@ public class SinchVoipService extends Service {
                 call = mSinchClient.getCallClient().callUser(userId);
             }
             call.addCallListener(callListener);
+            mCall = call;
             return call;
         }
 
