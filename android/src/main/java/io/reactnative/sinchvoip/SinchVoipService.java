@@ -277,8 +277,6 @@ public class SinchVoipService extends Service {
             if(call.getHeaders().containsKey("userName"))
                 callerName = call.getHeaders().get("userName");
 
-            Log.d(TAG, callerName);
-
             WritableMap params = Arguments.createMap();
             params.putString("callId", call.getCallId());
             params.putString("userId", call.getRemoteUserId());
