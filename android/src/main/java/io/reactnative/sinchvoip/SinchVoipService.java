@@ -488,7 +488,6 @@ public class SinchVoipService extends Service {
             NotificationResult result = mSinchClient.relayRemotePushNotificationPayload(payload);
             Log.d(TAG, "headers push :" + result.getCallResult().getHeaders().toString());
             callerName = result.getCallResult().getHeaders().get("userName");
-            Log.d(TAG, callerName);
             return result;
         }
     }
