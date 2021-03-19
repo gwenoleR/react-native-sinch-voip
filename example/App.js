@@ -47,6 +47,7 @@ class MainScreen extends Component {
 
   state = {
     userId: '',
+    userDisplayName: '',
     listening: false,
     userToCall: '',
   };
@@ -90,6 +91,13 @@ class MainScreen extends Component {
                 this.setState({userId: e});
               }}
             />
+            <TextInput
+              style={{height: 40}}
+              placeholder={'User display name'}
+              onChangeText={(e) => {
+                this.setState({userDisplayName: e});
+              }}
+            />
             <Button
               title="Listen for call"
               onPress={() => {
@@ -98,6 +106,7 @@ class MainScreen extends Component {
                   APPLICATION_SECRET,
                   HOST,
                   this.state.userId,
+                  this.state.userDisplayName,
                 );
                 this.setState({listening: true});
               }}
