@@ -45,6 +45,7 @@ import SinchVoip, {hasPermissions, SinchVoipEvents} from 'react-native-sinch-voi
 const App = () => {
 
     const [myId, setMyId] = useState('')
+    const [myDisplayName, setMyDisplayName] = useState('')
     const [userIdToCall, setUserIdToCall] = useState('')
     const [isSinchSetup, setIsSinchSetup] = useState(false)
 
@@ -60,12 +61,13 @@ const App = () => {
         })
     }, [])
 
-    const initSinch = (userId) => {
+    const initSinch = (userId, userDisplayName) => {
         SinchVoip.initClient(
             'sinchAppKey',
             'sinchAppSecret',
             'sinchHostName',
             userId,
+            userName
           )
     }
 
@@ -84,6 +86,13 @@ const App = () => {
             />
             <TextInput
               style={{height: 40}}
+              placeholder={'User display name'}
+              onChangeText={(e) => {
+                setMyDisplayName(e)
+              }}
+            />
+            <TextInput
+              style={{height: 40}}
               placeholder={'User ID to call'}
               onChangeText={(e) => {
                 setUserIdToCall(e)
@@ -92,7 +101,7 @@ const App = () => {
             <Button
                 title="Listen for call"
                 onPress={() => {
-                    initSinch(myId)
+                    initSinch(myId, myDisplayName)
                     setIsSinchSetup(true)
                     }
                 }
@@ -138,7 +147,7 @@ If you haven't the permissions you **must not**  call `SinchVoip.callUserWithId`
 
 ### SinchVoip
 
-#### `SinchVoip.initClient(applicationKey: string, applicationSecret: string, environmentHost: string, userId: string) => void`
+#### `SinchVoip.initClient(applicationKey: string, applicationSecret: string, environmentHost: string, userId: string, userDisplayName: string) => void`
 
 Init Sich Client with your App credentials and attribute an ID for your user.
 
@@ -149,7 +158,8 @@ SinchVoip.initClient(
     YOUR_APPLICATION_KEY,
     YOUR_APPLICATION_SECRET,
     HOST, // sandbox.sinch.com or clientapi.sinch.com
-    userId
+    userId,
+    userDisplayName
 )
 ```
 

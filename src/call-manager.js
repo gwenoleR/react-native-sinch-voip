@@ -70,13 +70,15 @@ export const CallManager = (() => {
       setupClient(sinchAppKey,
         sinchAppSecret,
         sinchHostName,
-        userId) {
+        userId,
+        userDisplayName) {
         if (!CallManager.isStarted) {
           SinchVoip.initClient(
             sinchAppKey,
             sinchAppSecret,
             sinchHostName,
             userId,
+            userDisplayName
           )
   
           CallManager.isStarted = true
