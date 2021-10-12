@@ -84,12 +84,12 @@ public class SinchVoipModule extends ReactContextBaseJavaModule implements Servi
     }
 
     @ReactMethod
-    public void initClient(final String applicationKey, final String applicationSecret, final String environmentHost, final String userId, final String userDisplayName) {
-        System.out.println("SinchVoip::Init Client with id " + userId);
+    public void initClient(final String applicationKey, final String applicationSecret, final String environmentHost, final String userId, final String userDisplayName, final boolean usePushNotification) {
+        System.out.println("SinchVoip::Init Client (using push notifications) with id " + userId);
 
-        mSinchServiceInterface.startClient(applicationKey, applicationSecret, environmentHost, userId, userDisplayName);
-
+        mSinchServiceInterface.startClient(applicationKey, applicationSecret, environmentHost, userId, userDisplayName, usePushNotification);
     }
+
 
     @ReactMethod
     public void terminate() {

@@ -30,19 +30,23 @@ class SinchVoip: RCTEventEmitter {
         self.sendEvent(withName: event, body: body)
     }
     
-    @objc(initClient:applicationSecret:environmentHost:userId:userDisplayName:)
-    func initClient(applicationKey: String, applicationSecret: String, environmentHost: String, userId: String, userDisplayName: String) -> SINClient {
+    @objc(initClient:applicationSecret:environmentHost:userId:userDisplayName:usePushNotification:)
+    func initClient(applicationKey: String, applicationSecret: String, environmentHost: String, userId: String, userDisplayName: String, usePushNotification: Bool) -> SINClient {
         print("SinchVoip::Init Client with id => \(userId) and displayName => \(userDisplayName)")
         UserDefaults.standard.set(userId, forKey: "userId")
         UserDefaults.standard.set(userDisplayName, forKey: "userDisplayName")
         
         let sinchClient = Sinch.client(withApplicationKey: applicationKey, applicationSecret: applicationSecret, environmentHost: environmentHost, userId: userId)
-        sinchClient?.setPushNotificationDisplayName(userDisplayName)
-        sinchClient?.enableManagedPushNotifications()
         sinchClient?.setSupportCalling(true)
-        sinchClient?.setSupportPushNotifications(true)
         sinchClient?.delegate = self
         sinchClient?.call()?.delegate = self
+        sinchClient?.enableManagedPushNotifications()
+
+        if (usePushNotification) {
+            
+            sinchClient?.setSupportPushNotifications(true)
+            sinchClient?.setPushNotificationDisplayName(userDisplayName)
+        }
 
         sinchClient?.startListeningOnActiveConnection()
         sinchClient?.start()

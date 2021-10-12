@@ -152,7 +152,7 @@ public class SinchVoipService extends Service {
         notificationManager.notify(74, builder.build());
     }
 
-    private Runnable createClient(String appKey, String appSecret, String env, String userId, String userName) {
+    private Runnable createClient(String appKey, String appSecret, String env, String userId, String userName, final boolean usePushNotification) {
         if(appKey.equals("") || appSecret.equals("")|| env.equals("") || userId.equals("") || userName.equals("")){
             appKey =  mSettings.getAppKey();
             appSecret = mSettings.getAppSecret();
@@ -183,12 +183,16 @@ public class SinchVoipService extends Service {
                         .environmentHost(finalEnv).build();
 
                 mSinchClient.setSupportCalling(true);
-                mSinchClient.setSupportManagedPush(true);
+                
                 mSinchClient.startListeningOnActiveConnection();
 
                 mSinchClient.addSinchClientListener(new MySinchClientListener());
                 mSinchClient.getCallClient().addCallClientListener(new SinchCallClientListener());
-                mSinchClient.setPushNotificationDisplayName("User " + finalUserName);
+
+                if(usePushNotification){
+                    mSinchClient.setSupportManagedPush(true);
+                    mSinchClient.setPushNotificationDisplayName("User " + finalUserName);
+                }
 
                 Boolean permissionsGranted = checkPermission();
 
@@ -373,12 +377,13 @@ public class SinchVoipService extends Service {
             String appSecret,
             String env,
             String userId,
-            String userName
+            String userName,
+            boolean usePushNotification
     ) {
         if (mSinchClient != null)
             return null;
         Log.w(TAG, "Needed to create Sinch client !");
-        return createClient(appKey, appSecret, env, userId, userName);
+        return createClient(appKey, appSecret, env, userId, userName, usePushNotification);
     }
 
     private Boolean checkPermission(){
@@ -417,13 +422,31 @@ public class SinchVoipService extends Service {
             String userId,
             String userName
     ) {
-        createClientIfNecessary(appKey, appSecret, env, userId, userName);
+        createClientIfNecessary(appKey, appSecret, env, userId, userName, false);
+    }
+
+    private void start(
+            String appKey,
+            String appSecret,
+            String env,
+            String userId,
+            String userName,
+            boolean usePushNotification
+    ) {
+        createClientIfNecessary(appKey, appSecret, env, userId, userName, usePushNotification);
     }
 
     private void stop() {
         if (mSinchClient != null) {
             mSinchClient.stopListeningOnActiveConnection();
-            mSinchClient.unregisterManagedPush();
+
+            try{
+                mSinchClient.unregisterManagedPush();
+            }
+            catch (Exception e){
+                Log.d(TAG, "Can't unregistered notifications");
+            }
+
             mSinchClient.terminateGracefully();
             mSinchClient = null;
         }
@@ -471,6 +494,13 @@ public class SinchVoipService extends Service {
                                 String appSecret,
                                 String env,
                                 String userId,
+                                String userName,
+                                boolean usePushNotification) { start(appKey, appSecret, env, userId, userName, usePushNotification); }
+
+        public void startClient(String appKey,
+                                String appSecret,
+                                String env,
+                                String userId,
                                 String userName) { start(appKey, appSecret, env, userId, userName); }
 
         public void stopClient() {
@@ -479,7 +509,7 @@ public class SinchVoipService extends Service {
 
         public NotificationResult relayRemotePushNotificationPayload(final String payload) throws InterruptedException {
 
-           Runnable creation =  createClientIfNecessary("","","","", "");
+           Runnable creation =  createClientIfNecessary("","","","", "", false);
            if(creation != null){
                synchronized (creation) {
                    creation.wait(5000);

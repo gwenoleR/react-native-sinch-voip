@@ -67,7 +67,8 @@ const App = () => {
             'sinchAppSecret',
             'sinchHostName',
             userId,
-            userName
+            userName,
+            false // use push notification
           )
     }
 
@@ -147,7 +148,7 @@ If you haven't the permissions you **must not**  call `SinchVoip.callUserWithId`
 
 ### SinchVoip
 
-#### `SinchVoip.initClient(applicationKey: string, applicationSecret: string, environmentHost: string, userId: string, userDisplayName: string) => void`
+#### `SinchVoip.initClient(applicationKey: string, applicationSecret: string, environmentHost: string, userId: string, userDisplayName: string, usePushNotification: boolean) => void`
 
 Init Sich Client with your App credentials and attribute an ID for your user.
 
@@ -159,7 +160,8 @@ SinchVoip.initClient(
     YOUR_APPLICATION_SECRET,
     HOST, // sandbox.sinch.com or clientapi.sinch.com
     userId,
-    userDisplayName
+    userDisplayName,
+    false // use push notification
 )
 ```
 

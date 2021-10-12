@@ -1,4 +1,4 @@
-import { NativeModules, NativeEventEmitter, PermissionsAndroid, Platform } from "react-native"
+import { NativeEventEmitter, NativeModules, PermissionsAndroid, Platform } from "react-native";
 
 const { SinchVoip } = NativeModules
 
@@ -73,14 +73,16 @@ export const CallManager = (() => {
         sinchAppSecret,
         sinchHostName,
         userId,
-        userDisplayName) {
+        userDisplayName,
+        usePushNotification = false) {
         if (!CallManager.isStarted) {
           SinchVoip.initClient(
             sinchAppKey,
             sinchAppSecret,
             sinchHostName,
             userId,
-            userDisplayName
+            userDisplayName,
+            usePushNotification
           )
   
           CallManager.isStarted = true
