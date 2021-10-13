@@ -168,7 +168,7 @@ class SinchVoip: RCTEventEmitter {
 
     @objc
     func isStarted(_ resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) {
-        resolve(SinchVoip.sharedInstance!.client != nil)
+        resolve(SinchVoip.sharedInstance?.client?.isStarted() ?? false)
     }
 }
 
