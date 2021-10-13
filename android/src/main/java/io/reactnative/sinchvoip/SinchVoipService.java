@@ -153,19 +153,67 @@ public class SinchVoipService extends Service {
     }
 
     private Runnable createClient(String appKey, String appSecret, String env, String userId, String userName, final boolean usePushNotification) {
-        if(appKey.equals("") || appSecret.equals("")|| env.equals("") || userId.equals("") || userName.equals("")){
-            appKey =  mSettings.getAppKey();
-            appSecret = mSettings.getAppSecret();
-            env = mSettings.getEnv();
-            userId = mSettings.getUserId();
-            userName = mSettings.getUserName();
-        } else {
-            mSettings.setStringWithKey("sinchAppKey", appKey);
-            mSettings.setStringWithKey("sinchAppSecret", appSecret);
-            mSettings.setStringWithKey("sinchEnv", env);
-            mSettings.setStringWithKey("sinchUserId", userId);
-            mSettings.setStringWithKey("sinchUserName", userName);
+        if(appKey != null){
+            if(appKey.equals("")){
+                appKey =  mSettings.getAppKey();
+            }
+            else {
+                mSettings.setStringWithKey("sinchAppKey", appKey);
+            }
         }
+        else{
+            appKey =  mSettings.getAppKey();
+        }
+
+        if(appSecret != null){
+            if(appSecret.equals("")){
+                appSecret =  mSettings.getAppSecret();
+            }
+            else {
+                mSettings.setStringWithKey("sinchAppSecret", appSecret);
+            }
+        }
+        else{
+            appSecret =  mSettings.getAppSecret();
+        }
+
+
+        if(env != null){
+            if(env.equals("")){
+                env =  mSettings.getEnv();
+            }
+            else {
+                mSettings.setStringWithKey("sinchEnv", env);
+            }
+        }
+        else{
+            env =  mSettings.getEnv();
+        }
+
+        if(userId != null){
+            if(userId.equals("")){
+                userId =  mSettings.getUserId();
+            }
+            else {
+                mSettings.setStringWithKey("sinchUserId", userId);
+            }
+        }
+        else{
+            userId =  mSettings.getUserId();
+        }
+
+        if(userName != null){
+            if(userName.equals("")){
+                userName =  mSettings.getUserName();
+            }
+            else {
+                mSettings.setStringWithKey("sinchUserName", userName);
+            }
+        }
+        else{
+            userName =  mSettings.getUserName();
+        }
+
 
         final Handler mainHandler = new Handler(getApplicationContext().getMainLooper());
 
@@ -452,11 +500,11 @@ public class SinchVoipService extends Service {
         }
     }
 
-    private boolean isStarted() {
-        return (mSinchClient != null && mSinchClient.isStarted());
-    }
-
     public class SinchServiceInterface extends Binder {
+
+        public boolean isStarted() {
+            return (mSinchClient != null && mSinchClient.isStarted());
+        }
 
         public Call callUser(String userId, Boolean withVideo){
             Map<String,String> headers = new HashMap<>();

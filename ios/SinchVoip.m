@@ -50,4 +50,7 @@ RCT_EXTERN_METHOD(switchCamera)
 
 RCT_EXTERN_METHOD(hasCurrentEstablishedCall)
 
+RCT_EXTERN_METHOD(isStarted: (RCTPromiseResolveBlock)resolve rejecter: (RCTPromiseRejectBlock)reject)
+
+
 @end

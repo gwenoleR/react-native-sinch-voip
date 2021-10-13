@@ -219,6 +219,10 @@ Disactive your video if your are in video call
 
 Change the current camera from `FRONT` to `BACK` or from `BACK` to `FRONT`
 
+#### `SinchVoip.isStarted() => boolean`
+
+Return `true` if the client is started
+
 ### SinchVoipEvents
 
 Available events :

@@ -165,6 +165,11 @@ class SinchVoip: RCTEventEmitter {
        
         return self.sendEvent(withName: "hasCurrentCall", body: inCall)
     }
+
+    @objc
+    func isStarted(_ resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) {
+        resolve(SinchVoip.sharedInstance!.client != nil)
+    }
 }
 
 @available(iOS 10.0, *)
